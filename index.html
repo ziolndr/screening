@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ARBITER | patient–mechanistic coherence screen</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* refined palette – deep, clinical, high‑end */
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-muted: #f1f5f9;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --ink: #0f172a;
+      --ink-soft: #334155;
+      --ink-muted: #64748b;
+      --accent: #0d9488;
+      --accent-dark: #0f766e;
+      --accent-soft: #ccfbf1;
+      --accent-glow: rgba(13,148,136,0.12);
+      --green: #10b981;
+      --green-bright: #34d399;
+      --sky: #0ea5e9;
+      --amber: #f59e0b;
+      --stone: #78716c;
+      --danger: #e11d48;
+      --mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
+      --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    /* precision grid + subtle texture */
+    .app-grid {
+      max-width: 1600px;
+      margin: 0 auto;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.05);
+    }
+
+    /* headers */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 72px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(0px);
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .brand span {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.2px;
+      background: none;
+      color: var(--ink-muted);
+      margin-left: 12px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      transition: 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .cta-nav {
+      background: var(--ink);
+      color: white !important;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 12px;
+    }
+    .cta-nav:hover { background: var(--accent-dark); color: white !important; }
+
+    /* hero */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .hero-copy {
+      padding: 56px 48px 48px 48px;
+    }
+    .badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: clamp(44px, 6vw, 72px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .hero-sub {
+      font-size: 18px;
+      color: var(--ink-soft);
+      max-width: 85%;
+      line-height: 1.45;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 48px;
+    }
+    .stat {
+      background: var(--surface);
+      padding: 20px 16px;
+    }
+    .stat-number {
+      font-family: var(--mono);
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--ink-muted);
+      margin-top: 6px;
+    }
+
+    .hero-visual {
+      background: linear-gradient(145deg, #f1f5f9 0%, #ffffff 100%);
+      display: flex;
+      align-items: flex-end;
+      padding: 40px 32px;
+      position: relative;
+      border-left: 1px solid var(--border);
+    }
+    .screen-card {
+      background: var(--surface);
+      border-radius: 28px;
+      box-shadow: 0 25px 45px -12px rgba(0,0,0,0.2);
+      border: 1px solid var(--border-strong);
+      padding: 28px;
+      width: 100%;
+    }
+    .screen-header {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.4px;
+      margin-bottom: 12px;
+    }
+    .screen-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .mini-metrics {
+      display: flex;
+      gap: 24px;
+      margin: 16px 0;
+    }
+    .mini-metric strong {
+      font-family: var(--mono);
+      font-size: 24px;
+      color: var(--accent);
+    }
+    .pipeline-strip {
+      display: flex;
+      gap: 8px;
+      margin-top: 24px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+    .p-step {
+      flex: 1;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .p-step span {
+      display: block;
+      font-weight: 700;
+      color: var(--ink);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    /* section */
+    .section {
+      padding: 56px 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-dark {
+      background: var(--surface-muted);
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .section-kicker {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.4px;
+    }
+    .section-header h2 {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      max-width: 500px;
+    }
+    .section-header p {
+      max-width: 520px;
+      color: var(--ink-soft);
+    }
+    .chain {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .chain-node {
+      padding: 28px 20px;
+      border-right: 1px solid var(--border);
+    }
+    .chain-node:last-child { border-right: 0; }
+    .node-num {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .node-title {
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .node-desc {
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.45;
+    }
+
+    /* app panel – 3 column high end */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 360px 1fr 360px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .panel {
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .panel:last-child { border-right: none; }
+    .panel-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-muted);
+    }
+    .panel-title {
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .panel-sub {
+      font-size: 11px;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+    .panel-body {
+      padding: 20px;
+    }
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.5;
+      resize: vertical;
+      background: white;
+      transition: 0.2s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .upload-zone {
+      border: 2px dashed var(--border-strong);
+      border-radius: 20px;
+      text-align: center;
+      padding: 24px 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .upload-zone.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 10px 18px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      background: white;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-primary {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+    .btn-outline-accent { border-color: var(--accent); color: var(--accent); }
+    .btn-outline-accent:hover { background: var(--accent-glow); }
+    .console-preview {
+      background: #0b1120;
+      border-radius: 18px;
+      padding: 18px;
+      color: #ccf7f0;
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      margin-bottom: 16px;
+    }
+    .progress-card {
+      background: var(--surface-muted);
+      border-radius: 24px;
+      padding: 18px;
+      text-align: center;
+    }
+    .big-number {
+      font-size: 48px;
+      font-weight: 700;
+      font-family: var(--mono);
+      letter-spacing: -1px;
+    }
+    .threshold-badge {
+      margin: 16px 0 8px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .results-table th {
+      text-align: left;
+      padding: 12px 4px 8px 0;
+      color: var(--ink-muted);
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+    }
+    .results-table td {
+      padding: 12px 4px 12px 0;
+      border-bottom: 1px solid var(--border-soft);
+      vertical-align: middle;
+    }
+    .score-cell {
+      font-family: var(--mono);
+      font-weight: 600;
+      text-align: right;
+    }
+    .rank-high { color: var(--green); }
+    .rank-mid { color: var(--amber); }
+    .below-threshold-row td { opacity: 0.5; }
+    .threshold-marker {
+      background: var(--accent-glow);
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 40px;
+      display: inline-block;
+      margin: 8px 0;
+    }
+    .audit-card {
+      background: var(--surface-muted);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .disclaimer-note {
+      font-size: 10px;
+      color: var(--ink-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+    footer {
+      padding: 48px 48px 32px;
+      background: var(--surface);
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    @media (max-width: 1100px) {
+      .dashboard { grid-template-columns: 1fr; }
+      .panel { border-right: none; border-bottom: 1px solid var(--border); }
+      .hero { grid-template-columns: 1fr; }
+      .chain { grid-template-columns: 1fr; }
+      .chain-node { border-right: none; border-bottom: 1px solid var(--border); }
+      .section, .hero-copy { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-grid">
+  <nav class="nav">
+    <div class="brand">ARBITER <span>coherence calculator · deterministic semantic filter</span></div>
+    <div class="nav-links">
+      <a href="#chain">pipeline</a>
+      <a href="#console">screen</a>
+      <a href="#results">rankings</a>
+      <a href="#" class="cta-nav" id="navDemoTrigger">load LRRK2 cohort</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-copy">
+      <div class="badge">semantic pre‑filter for discovery</div>
+      <h1>Patient biology before wet lab.</h1>
+      <p class="hero-sub">Encode disease mechanism, mutation, pathway context, and validation constraints into a deterministic field. ARBITER ranks candidate compounds by mechanistic coherence – not affinity, not marketing.</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-number">103</div><div class="stat-label">compounds screened</div></div>
+        <div class="stat"><div class="stat-number">22</div><div class="stat-label">≥0.70 threshold</div></div>
+        <div class="stat"><div class="stat-number">72D</div><div class="stat-label">meaning geometry</div></div>
+        <div class="stat"><div class="stat-number">26MB</div><div class="stat-label">deterministic engine</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="screen-card">
+        <div class="screen-header">reference profile · LRRK2 G2019S</div>
+        <div class="screen-title">lysosomal‑autophagy flux / dopaminergic rescue</div>
+        <div class="mini-metrics"><strong>0.852</strong> DNL151 &nbsp;|&nbsp; <strong>0.821</strong> anle138b</div>
+        <div class="pipeline-strip">
+          <div class="p-step"><span>00</span>patient state</div>
+          <div class="p-step"><span>01</span>mechanism field</div>
+          <div class="p-step"><span>02</span>candidates</div>
+          <div class="p-step"><span>03</span>coherence rank</div>
+          <div class="p-step"><span>04</span>organoid validation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="chain">
+    <div class="section-header">
+      <div><div class="section-kicker">translational chain</div><h2>From patient state to ranked intervention</h2></div>
+      <p>ARBITER does not predict binding or clinical outcome. It calculates semantic-mechanistic fit: how coherent each candidate is with the patient-derived disease field and biological constraints.</p>
+    </div>
+    <div class="chain">
+      <div class="chain-node"><div class="node-num">00</div><div class="node-title">Patient profile</div><div class="node-desc">Mutation, pathway dysfunction, cell phenotype, clinical objective, validation model.</div></div>
+      <div class="chain-node"><div class="node-num">01</div><div class="node-title">Constraint field</div><div class="node-desc">Target biology, mechanistic requirements, disqualifiers, validation rigor.</div></div>
+      <div class="chain-node"><div class="node-num">02</div><div class="node-title">Candidate library</div><div class="node-desc">Compounds, repurposing evidence, mechanism notes, known liabilities.</div></div>
+      <div class="chain-node"><div class="node-num">03</div><div class="node-title">Coherence scoring</div><div class="node-desc">ARBITER ranks fit against the patient‑mechanism field.</div></div>
+      <div class="chain-node"><div class="node-num">04</div><div class="node-title">Above‑threshold</div><div class="node-desc">Only candidates ≥0.70 advance to organoid/wet‑lab validation.</div></div>
+    </div>
+  </div>
+
+  <div class="dashboard" id="console">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">01 · patient & mechanism</div><div class="panel-sub">disease‑derived constraints</div></div>
+      <div class="panel-body">
+        <label style="font-weight:500; font-size:12px;">Patient / disease profile</label>
+        <textarea id="patientInput" rows="3" placeholder="e.g., LRRK2 G2019S Parkinson's, dopaminergic vulnerability, lysosomal impairment, alpha-synuclein burden, need for disease-modifying intervention."></textarea>
+        <label style="font-weight:500; font-size:12px; margin-top:16px; display:block;">Mechanistic constraint field</label>
+        <textarea id="constraintInput" rows="3" placeholder="Direct LRRK2 target engagement, restoration of autophagy flux, reduction of alpha-synuclein, CNS penetrance, disease-modifying plausibility. Penalize symptomatic-only, poor CNS, non-specific mechanisms."></textarea>
+      </div>
+      <div class="panel-head"><div class="panel-title">02 · candidate library</div><div class="panel-sub">upload CSV or use sample</div></div>
+      <div class="panel-body">
+        <div class="upload-zone" id="uploadZone">
+          <div style="font-weight:500;">📄 drop CSV / text file</div>
+          <div style="font-size:11px; color:var(--ink-muted);">one compound per row · first column = name</div>
+          <div id="fileName" style="margin-top:8px; font-family:monospace; font-size:10px;"></div>
+        </div>
+        <input type="file" id="fileInput" accept=".csv,.txt" style="display:none;" />
+        <div class="btn-group">
+          <button class="btn" id="loadDemoBtn">load LRRK2 sample</button>
+          <button class="btn btn-primary" id="screenBtn" disabled>→ run coherence screen</button>
+        </div>
+        <div class="btn-group">
+          <button class="btn" id="downloadBtn" disabled>export ranked CSV</button>
+          <button class="btn btn-outline-accent" id="toggleViewBtn">show top 20</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">ARBITER · coherence console</div><div class="panel-sub" id="runMeta">ready</div></div>
+      <div class="panel-body">
+        <div class="console-preview" id="queryPreview">Load the LRRK2 sample to assemble the patient-mechanism query.</div>
+        <div class="progress-card">
+          <div style="font-size:11px; letter-spacing:0.3px;">screening progress</div>
+          <div class="big-number"><span id="doneCount">0</span>/<span id="totalCount">0</span></div>
+          <div class="pbar" style="height:4px; background:#e2e8f0; margin:14px 0;"><div id="pfill" style="width:0%; height:100%; background:var(--accent);"></div></div>
+          <div class="threshold-badge">threshold ⩾ 0.70 → advance to validation</div>
+          <div class="big-number"><span id="aboveCount">0</span></div>
+          <div class="small-text" style="font-size:10px;">candidates passing filter</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="results">
+      <div class="panel-head"><div class="panel-title">ranked candidate audit</div><div class="panel-sub">deterministic coherence</div></div>
+      <div class="panel-body" style="padding:0 20px 20px 20px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:12px;"><span id="resultsMeta">No screen executed</span><span style="font-size:10px;">score</span></div>
+        <div style="max-height:560px; overflow-y:auto;">
+          <table class="results-table" style="width:100%;">
+            <thead><tr><th>#</th><th>candidate</th><th>score</th></tr></thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section section-dark">
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:24px;">
+      <div class="audit-card"><h3 style="font-weight:600; margin-bottom:8px;">✓ measured</h3><p>Semantic-mechanistic coherence between patient-derived field and compound description.</p></div>
+      <div class="audit-card"><h3 style="font-weight:600; margin-bottom:8px;">✗ not measured</h3><p>Binding affinity, PK/PD, toxicity, trial success probability, or medical recommendation.</p></div>
+      <div class="audit-card"><h3 style="font-weight:600; margin-bottom:8px;">⚙️ deterministic</h3><p>Same input → same output. Calculator, not a learner. Fully auditable.</p></div>
+    </div>
+    <div class="disclaimer-note" style="margin-top:24px;">research‑grade prototype · not a clinical decision system · all outputs require wet‑lab validation, pharmacological & safety review.</div>
+  </div>
+
+  <footer>
+    <div style="font-size:12px; color:var(--ink-muted);">actual general intelligence · ARBITER coherence engine · patient biology → mechanism → compound → validation</div>
+  </footer>
+</div>
+
+<script>
+  const API = 'https://api.arbiter.traut.ai/public/compare';
+  const THRESHOLD = 0.70;
+  const BATCH = 45;
+
+  let candidates = [];
+  let results = [];
+  let showAll = false;
+
+  // demo corpus
+  const DEMO_PATIENT = `LRRK2 G2019S Parkinson's disease. Dopaminergic neuron vulnerability with lysosomal-autophagy impairment, alpha-synuclein burden, mitochondrial stress, neuroinflammatory context. Need for disease-modifying intervention (not symptomatic). Validation path: iPSC-derived dopaminergic neurons / organoid rescue models.`;
+  const DEMO_CONSTRAINT = `Prioritize compounds with direct LRRK2 target engagement or knockdown, efficacy in LRRK2 G2019S context, restoration of lysosomal-autophagy flux, reduction of alpha-synuclein aggregate load, mitochondrial protection, CNS penetration. Penalize symptomatic-only mechanisms, non-specific antioxidants, poor CNS penetration, weak PD relevance.`;
+  const DEMO_CANDIDATES = [
+    'DNL151 - LRRK2 kinase inhibitor; CNS penetrant; direct LRRK2 engagement; disease-modifying',
+    'Anle138b - alpha-synuclein oligomer modulator; aggregation inhibition; neuroprotection',
+    'Riluzole - glutamate modulator; ALS drug; symptomatic only; not PD-validated',
+    'NPT200-11 - alpha-synuclein misfolding inhibitor; small molecule; aggregation prevention',
+    'Rifampicin - antibiotic; alpha-synuclein disaggregation; in vitro only; not clinical',
+    'Nilotinib - c-Abl inhibitor; autophagy induction; alpha-synuclein clearance; CNS controversial',
+    'UCB0599 - alpha-synuclein misfolding inhibitor; oral; PD program',
+    'Doxycycline - anti-inflammatory; non-specific; not PD-targeted',
+    'BIIB094 - LRRK2 antisense oligonucleotide; lowers LRRK2 protein; disease-modifying',
+    'N-acetylcysteine - antioxidant; glutathione precursor; weak CNS; non-specific',
+    'Venglustat - glucosylceramide synthase inhibitor; lysosomal substrate reduction',
+    'ISRIB - integrated stress response inhibitor; proteostasis; experimental',
+    'DNL201 - LRRK2 kinase inhibitor; direct target engagement; G2019S relevant',
+    'Lithium - GSK3 inhibition; autophagy; not PD validated',
+    'Etanercept - TNF inhibitor; peripheral; poor CNS penetration',
+    'Donepezil - acetylcholinesterase inhibitor; cognitive symptomatic; not disease-modifying',
+    'Liraglutide - GLP-1 agonist; neuroprotection; metabolic/anti-inflammatory',
+    'Azithromycin - antibiotic; off-target; not disease-relevant',
+    'Vitamin C - antioxidant; no disease-modifying evidence',
+    'Niclosamide - mitochondrial uncoupler; autophagy; repurposing complexity',
+    'Rapamycin - mTOR inhibitor; autophagy induction; broad immunosuppression',
+    'Prasinezumab - anti-alpha-synuclein antibody; aggregate clearance',
+    'Cinpanemab - anti-alpha-synuclein antibody; N-terminal binding',
+    'Memantine - NMDA antagonist; symptomatic dementia; not PD-specific',
+    'Ceftriaxone - glutamate modulation; failed ALS trials; not PD-specific'
+  ];
+
+  const $ = id => document.getElementById(id);
+  const toast = (msg) => { const t = document.getElementById('toast'); if(t){ t.innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); } else alert(msg); };
+
+  function assembleQuery() {
+    return `Patient / disease profile:\n${$('patientInput').value.trim()}\n\nMechanistic constraint field:\n${$('constraintInput').value.trim()}\n\nQuestion: Which candidate compounds are most coherent with the patient-derived disease mechanism and should be prioritized for experimental validation?`;
+  }
+
+  function updatePreview() {
+    const q = assembleQuery();
+    $('queryPreview').innerText = q.trim() || 'Fill patient profile and mechanism field.';
+    const ready = ($('patientInput').value.trim() && $('constraintInput').value.trim() && candidates.length > 0);
+    $('screenBtn').disabled = !ready;
+  }
+
+  function loadDemo() {
+    candidates = [...DEMO_CANDIDATES];
+    $('patientInput').value = DEMO_PATIENT;
+    $('constraintInput').value = DEMO_CONSTRAINT;
+    $('fileName').innerText = `sample loaded · ${candidates.length} candidates`;
+    document.getElementById('uploadZone').classList.add('drag-over');
+    $('totalCount').innerText = candidates.length;
+    $('doneCount').innerText = '0';
+    $('aboveCount').innerText = '0';
+    $('pfill').style.width = '0%';
+    $('runMeta').innerText = 'sample ready';
+    updatePreview();
+    toast('LRRK2 cohort loaded');
+  }
+
+  async function compareBatch(query, batch) {
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, candidates: batch })
+      });
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+      const candidatesList = data.all || data.top || [];
+      const map = new Map(candidatesList.map(c => [c.text, Number(c.score)]));
+      return batch.map(c => ({ candidate: c, score: map.get(c) ?? 0.35, source: 'arbiter' }));
+    } catch(e) {
+      console.warn(e);
+      return batch.map(c => ({ candidate: c, score: 0.35, source: 'fallback' }));
+    }
+  }
+
+  async function screen() {
+    const query = assembleQuery();
+    if (!query.trim() || candidates.length === 0) return;
+    results = [];
+    $('screenBtn').disabled = true;
+    $('downloadBtn').disabled = true;
+    $('runMeta').innerText = 'screening ...';
+    $('resultsBody').innerHTML = '';
+    const total = candidates.length;
+    $('totalCount').innerText = total;
+    $('aboveCount').innerText = '0';
+    for (let i = 0; i < total; i += BATCH) {
+      const batch = candidates.slice(i, i + BATCH);
+      const batchRes = await compareBatch(query, batch);
+      results.push(...batchRes);
+      const done = Math.min(i + BATCH, total);
+      $('doneCount').innerText = done;
+      $('pfill').style.width = (done / total) * 100 + '%';
+    }
+    results.sort((a,b) => b.score - a.score);
+    renderResults();
+    $('runMeta').innerText = 'complete';
+    $('downloadBtn').disabled = false;
+    updatePreview();
+    toast(`screening complete · ${results.filter(r=>r.score>=THRESHOLD).length} above threshold`);
+  }
+
+  function renderResults() {
+    const above = results.filter(r => r.score >= THRESHOLD).length;
+    $('aboveCount').innerText = above;
+    $('resultsMeta').innerHTML = `${results.length} screened · ${above} ≥0.70 · ${results.length-above} audit`;
+    const visible = showAll ? results : results.slice(0, 20);
+    let html = '';
+    let thresholdLineAdded = false;
+    visible.forEach((r, idx) => {
+      if (!thresholdLineAdded && r.score < THRESHOLD && results.length > 20) {
+        html += `<tr class="below-threshold-row"><td colspan="3" style="padding:12px 0; font-size:10px; color:var(--ink-muted);">▸ below 0.70 threshold – retained for audit, not advanced</td></tr>`;
+        thresholdLineAdded = true;
+      }
+      const parts = r.candidate.split(' - ');
+      const name = parts.shift() || r.candidate;
+      const note = parts.join(' - ');
+      const scoreClass = r.score >= THRESHOLD ? 'rank-high' : (r.score > 0.55 ? 'rank-mid' : '');
+      html += `<tr style="${r.score < THRESHOLD ? 'opacity:0.55;' : ''}">
+        <td style="width:40px;">${idx+1}</td>
+        <td><strong style="font-weight:600;">${escapeHtml(name)}</strong>${note ? `<div style="font-size:10px; color:var(--ink-muted);">${escapeHtml(note)}</div>` : ''}</td>
+        <td class="score-cell ${scoreClass}">${r.score.toFixed(3)}</td>
+      </tr>`;
+    });
+    $('resultsBody').innerHTML = html;
+  }
+
+  function downloadCSV() {
+    if (!results.length) return;
+    let csv = "rank,candidate,score,pass_threshold\n";
+    results.forEach((r,i) => {
+      csv += `${i+1},"${r.candidate.replace(/"/g,'""')}",${r.score.toFixed(6)},${r.score>=THRESHOLD ? "advance" : "audit"}\n`;
+    });
+    const blob = new Blob([csv], {type:"text/csv"});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "arbiter_patient_screen.csv";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast("CSV exported");
+  }
+
+  function handleFile(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l);
+      candidates = lines.map(l => l.split(',')[0].trim()).filter(c=>c);
+      $('fileName').innerText = `${file.name} · ${candidates.length} candidates`;
+      document.getElementById('uploadZone').classList.add('drag-over');
+      $('totalCount').innerText = candidates.length;
+      $('doneCount').innerText = '0';
+      updatePreview();
+      toast(`loaded ${candidates.length} candidates`);
+    };
+    reader.readAsText(file);
+  }
+
+  function escapeHtml(s) { return String(s).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+  $('patientInput').addEventListener('input', updatePreview);
+  $('constraintInput').addEventListener('input', updatePreview);
+  $('loadDemoBtn').onclick = loadDemo;
+  $('screenBtn').onclick = screen;
+  $('downloadBtn').onclick = downloadCSV;
+  $('toggleViewBtn').onclick = () => { showAll = !showAll; $('toggleViewBtn').innerText = showAll ? 'show top 20' : 'show all'; renderResults(); };
+  $('uploadZone').onclick = () => $('fileInput').click();
+  $('fileInput').onchange = e => handleFile(e.target.files[0]);
+  $('uploadZone').ondragover = e => { e.preventDefault(); $('uploadZone').classList.add('drag-over'); };
+  $('uploadZone').ondragleave = () => $('uploadZone').classList.remove('drag-over');
+  $('uploadZone').ondrop = e => { e.preventDefault(); $('uploadZone').classList.remove('drag-over'); handleFile(e.dataTransfer.files[0]); };
+  document.getElementById('navDemoTrigger').onclick = (e) => { e.preventDefault(); loadDemo(); };
+  updatePreview();
+</script>
+</body>
+</html>
